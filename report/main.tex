@@ -1,0 +1,1028 @@
+% =====================================================================
+%  RAPPORT DE PROJET
+%  Système Intelligent de Contrôle Qualité des Impellers
+%  Filière BDIA1 — Année universitaire 2025-2026
+% =====================================================================
+\documentclass[12pt,a4paper,openany]{report}
+
+% ---------- Encoding & langue ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ---------- Mise en page ----------
+\usepackage[a4paper,margin=2.5cm,headheight=15pt]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\setlist{itemsep=2pt,topsep=4pt}
+
+% ---------- Graphiques & tableaux ----------
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup{font=small,labelfont=bf}
+\graphicspath{{images/}}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{multirow}
+
+% ---------- Couleurs ----------
+\usepackage[dvipsnames]{xcolor}
+\definecolor{primary}{RGB}{0,90,160}
+\definecolor{accent}{RGB}{200,80,30}
+\definecolor{softgray}{RGB}{240,240,245}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekw}{RGB}{0,90,160}
+\definecolor{codestr}{RGB}{170,55,30}
+\definecolor{codecmt}{RGB}{100,110,100}
+
+% ---------- Boîtes ----------
+\usepackage[most]{tcolorbox}
+\newtcolorbox{infobox}[1][]{enhanced,colback=softgray,colframe=primary,
+  fonttitle=\bfseries,coltitle=white,colbacktitle=primary,
+  boxrule=0.4pt,arc=2pt,left=8pt,right=8pt,top=4pt,bottom=4pt,#1}
+
+% ---------- Code (listings) ----------
+\usepackage{listings}
+\lstdefinestyle{pystyle}{
+  language=Python,
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekw}\bfseries,
+  stringstyle=\color{codestr},
+  commentstyle=\color{codecmt}\itshape,
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=6pt,
+  frame=single, rulecolor=\color{gray!40},
+  breaklines=true, breakatwhitespace=true,
+  showstringspaces=false,
+  tabsize=2, captionpos=b,
+  literate=
+    {é}{{\'e}}1 {è}{{\`e}}1 {ê}{{\^e}}1 {à}{{\`a}}1 {â}{{\^a}}1
+    {î}{{\^\i}}1 {ô}{{\^o}}1 {ù}{{\`u}}1 {û}{{\^u}}1 {ç}{{\c c}}1
+    {É}{{\'E}}1 {È}{{\`E}}1 {Ê}{{\^E}}1 {À}{{\`A}}1
+}
+\lstset{style=pystyle}
+
+% ---------- Mathématiques ----------
+\usepackage{amsmath,amssymb,amsfonts}
+
+% ---------- Hyperliens (en dernier) ----------
+\usepackage[hidelinks,colorlinks=true,linkcolor=primary,urlcolor=primary]{hyperref}
+
+% ---------- Style des chapitres / sections ----------
+\titleformat{\chapter}[hang]{\Huge\bfseries\color{primary}}{\thechapter.}{1em}{}
+\titlespacing*{\chapter}{0pt}{-20pt}{20pt}
+\titleformat{\section}{\Large\bfseries\color{primary}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries\color{accent}}{\thesubsection}{0.5em}{}
+
+% ---------- En-tête / pied de page ----------
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyhead[L]{\small\textit{Contrôle Qualité Intelligent des Impellers}}
+\fancyhead[R]{\small\textit{BDIA1 — 2025/2026}}
+\fancyfoot[C]{\thepage}
+
+% =====================================================================
+\begin{document}
+
+% =====================================================================
+%  PAGE DE GARDE
+% =====================================================================
+\begin{titlepage}
+\centering
+\vspace*{0.3cm}
+
+{\Large\textbf{Université / École} \par}
+{\large Filière BDIA1 — Big Data \& Intelligence Artificielle \par}
+\vspace{0.4cm}
+
+\includegraphics[width=0.35\textwidth]{image1.png}\\[0.6cm]
+
+\rule{\textwidth}{1.4pt}\\[0.4cm]
+{\Huge\bfseries\color{primary} Système Intelligent\\[0.2cm] de Contrôle Qualité\\[0.2cm] des Impellers \par}
+\vspace{0.3cm}
+\rule{\textwidth}{1.4pt}\\[0.6cm]
+
+{\large\itshape Détection automatique de défauts de fonderie\\
+par Deep Learning et Transfer Learning \par}
+
+\vspace{1.2cm}
+
+\begin{minipage}[t]{0.46\textwidth}
+\raggedright
+{\large\bfseries Réalisé par~:}\\[0.3cm]
+{\large
+Ayoub \textsc{El-Moujahid}\\
+Mohamed \textsc{Errahmouni}\\
+Soulama Doubié Judicael Noé\\
+Hazem \textsc{Douzi}
+}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.46\textwidth}
+\raggedleft
+{\large\bfseries Encadré par~:}\\[0.3cm]
+{\large Prof. Dr Naoual \textsc{Attaoui}}
+\end{minipage}
+
+\vfill
+
+{\large Année universitaire \textbf{2025--2026}}\\[0.4cm]
+\vspace{0.4cm}
+\end{titlepage}
+
+% =====================================================================
+%  RÉSUMÉ
+% =====================================================================
+\chapter*{Résumé}
+\addcontentsline{toc}{chapter}{Résumé}
+
+Ce projet présente le développement d'un \textbf{système intelligent de contrôle qualité} dédié aux \emph{impellers} (roues de pompes) issus du procédé de fonderie en moule carapace (\emph{shell mould casting}). Après refroidissement, certaines pièces présentent des défauts (fissures, déformations, bavures) qui compromettent la fiabilité des pompes. Notre objectif est d'automatiser la détection de ces défauts par apprentissage profond.
+
+Nous avons construit un pipeline complet de \textbf{prétraitement reproductible} (TensorFlow et PyTorch), équilibré les classes par \emph{class weighting}, puis comparé trois familles de modèles~: un \textbf{MLP} de référence, un \textbf{CNN} entraîné de zéro, et un modèle de \textbf{Transfer Learning} basé sur \textsc{EfficientNetB0}. Le modèle final atteint \textbf{99{,}44\,\% d'accuracy} et un \textbf{AUC de 0{,}9993} sur l'ensemble de test, avec un \emph{recall} de \textbf{99{,}34\,\%} sur la classe défectueuse — performance compatible avec un déploiement industriel.
+
+\vspace{0.4cm}
+\noindent\textbf{Mots-clés~:} Contrôle qualité, fonderie, impeller, deep learning, CNN, transfer learning, EfficientNet, TensorFlow, PyTorch.
+
+% =====================================================================
+%  TABLE DES MATIÈRES
+% =====================================================================
+\tableofcontents
+\thispagestyle{fancy}
+
+% =====================================================================
+%  CHAPITRE 1 — INTRODUCTION
+% =====================================================================
+\chapter{Introduction et contexte industriel}
+
+\section{Le procédé de fabrication des impellers}
+
+Un \emph{impeller} (ou \emph{turbine}/\emph{roue de pompe}) est une pièce métallique critique qui transmet l'énergie mécanique au fluide pompé. Sa fabrication suit trois grandes étapes~:
+
+\begin{enumerate}
+    \item \textbf{Conception (Design of pump).} La pièce finale est modélisée en CAO~: une roue à aubes destinée à équiper une pompe centrifuge.
+    \item \textbf{Moule carapace (Shell mould).} Un moule en sable aggloméré par résine est confectionné autour de l'empreinte de la pièce.
+    \item \textbf{Coulée en moule carapace (Shell mould casting).} Plusieurs moules sont assemblés et serrés dans un cadre. Le métal en fusion est coulé, refroidit et se solidifie. Après démoulage, la pièce métallique est nettoyée, ébavurée puis usinée si nécessaire.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.46\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{image3.png}
+        \caption{Moule carapace assemblé}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.46\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{image4.png}
+        \caption{Coulée et démoulage}
+    \end{subfigure}
+    \caption{Étapes du procédé de fonderie en moule carapace.}
+    \label{fig:fabrication}
+\end{figure}
+
+\section{Problématique}
+
+Après refroidissement, le contrôle visuel manuel de chaque pièce est~:
+\begin{itemize}
+    \item lent et coûteux (cadence de production limitée),
+    \item subjectif (dépendant de l'opérateur),
+    \item sujet à erreurs (fatigue, défauts subtils non vus à l'\oe il nu).
+\end{itemize}
+
+Les anomalies les plus fréquentes sont~: \textbf{fissures}, \textbf{déformations} et \textbf{bavures}. Un seul défaut non détecté peut provoquer une défaillance de pompe en service, avec des conséquences coûteuses pour le client final.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.22\textwidth}
+        \centering\includegraphics[width=\linewidth]{image5.jpeg}
+        \caption*{\small\color{red}\textbf{Fissure}}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.22\textwidth}
+        \centering\includegraphics[width=\linewidth]{image6.jpeg}
+        \caption*{\small\color{red}\textbf{Déformation}}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.22\textwidth}
+        \centering\includegraphics[width=\linewidth]{image7.jpeg}
+        \caption*{\small\color{red}\textbf{Bavure}}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.22\textwidth}
+        \centering\includegraphics[width=\linewidth]{image8.jpeg}
+        \caption*{\small\color{ForestGreen}\textbf{Pièce normale}}
+    \end{subfigure}
+    \caption{Exemples typiques de défauts \emph{vs.} pièce conforme.}
+    \label{fig:defauts}
+\end{figure}
+
+\section{Objectif du projet}
+
+\begin{infobox}[title=Objectif]
+Mettre en place un \textbf{système de contrôle qualité automatique} fondé sur la vision par ordinateur et le \emph{deep learning}, capable de classifier en temps réel chaque impeller comme \texttt{def\_front} (défectueux) ou \texttt{ok\_front} (conforme), avec un \textbf{recall élevé sur la classe défectueuse}.
+\end{infobox}
+
+% =====================================================================
+%  CHAPITRE 2 — SOLUTION PROPOSÉE
+% =====================================================================
+\chapter{Solution proposée}
+
+Notre solution repose sur une chaîne de traitement entièrement logicielle qui s'intègre en aval de la ligne de fonderie. Une caméra acquiert l'image de chaque pièce, qui est ensuite analysée par un modèle d'IA renvoyant la prédiction \emph{conforme/défectueux} en quelques millisecondes.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{image9.png}
+    \caption{Architecture globale du système de contrôle qualité proposé.}
+    \label{fig:solution}
+\end{figure}
+
+\section{Pipeline de développement du modèle d'IA}
+
+Le développement du modèle suit cinq étapes successives illustrées en figure~\ref{fig:pipeline-ia}~:
+\begin{enumerate}
+    \item Collecte des images d'impellers,
+    \item Prétraitement des images,
+    \item Entraînement du modèle,
+    \item Détection et classification des défauts,
+    \item Test et validation.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{image10.png}
+    \caption{Pipeline de développement du modèle d'intelligence artificielle.}
+    \label{fig:pipeline-ia}
+\end{figure}
+
+% =====================================================================
+%  CHAPITRE 3 — DONNÉES
+% =====================================================================
+\chapter{Collecte et organisation des données}
+
+\section{Source du dataset}
+
+Le jeu de données utilisé est le \emph{Casting Defect Detection} créé par Ravirajsinh Dabhi et publié sur Kaggle. Il contient des images de pièces de fonderie réparties en deux classes~:
+\begin{itemize}
+    \item \texttt{def\_front} — pièces présentant un défaut visible,
+    \item \texttt{ok\_front} — pièces conformes.
+\end{itemize}
+
+Le dataset est déjà organisé en trois sous-ensembles \emph{train / validation / test}, ce qui facilite la mise en place du protocole expérimental.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{image11.png}
+    \caption{Aperçu du dataset \emph{Casting Defect Detection} (Kaggle).}
+    \label{fig:dataset}
+\end{figure}
+
+\section{Stratégie de répartition}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{Ensemble} & \textbf{Proportion} & \textbf{Rôle} \\
+\midrule
+Train       & 80\,\% & Apprentissage des paramètres \\
+Validation  & 10\,\% & Réglage des hyperparamètres / \emph{early stopping} \\
+Test        & 10\,\% & Évaluation finale (jamais vue) \\
+\bottomrule
+\end{tabular}
+\caption{Répartition train/validation/test du dataset.}
+\end{table}
+
+% =====================================================================
+%  CHAPITRE 4 — PRÉTRAITEMENT
+% =====================================================================
+\chapter{Prétraitement des images}
+
+Nous avons développé deux pipelines équivalents~: un en \textbf{TensorFlow} (\texttt{tf.data}) et un en \textbf{PyTorch} (\texttt{DataLoader}). Tous deux partagent la même philosophie~: reproductibilité, normalisation \emph{ImageNet}, augmentation stochastique sur le \emph{train}, et prétraitement déterministe sur \emph{validation/test}.
+
+\section{Vue d'ensemble du pipeline TensorFlow (10 sections)}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{image12.jpeg}
+    \caption{Bandeau du pipeline de prétraitement TensorFlow.}
+\end{figure}
+
+\begin{enumerate}
+    \item \textbf{Reproductibilité}~: \texttt{SEED = 42} (\texttt{random}, \texttt{numpy}, \texttt{tensorflow}).
+    \item \textbf{Détection GPU/CPU}~: \texttt{tf.config.list\_physical\_devices()}.
+    \item \textbf{Color Balancing}~: White Balance, Histogram Equalization, Channel Shuffle.
+    \item \textbf{Normalisation ImageNet}~: $\mu = [0.485,0.456,0.406]$, $\sigma=[0.229,0.224,0.225]$.
+    \item \textbf{Pipeline Train}~: crop $224\times224$, flips, rotations, jitter.
+    \item \textbf{Pipeline Eval}~: \emph{center crop} déterministe + white balance.
+    \item \textbf{Chargement}~: \texttt{image\_dataset\_from\_directory} pour train/val/test.
+    \item \textbf{Class Weights}~: équivalent du \texttt{WeightedRandomSampler} de PyTorch.
+    \item \textbf{Pipelines tf.data}~: \texttt{.map()} $\to$ \texttt{.batch()} $\to$ \texttt{.prefetch(AUTOTUNE)}.
+    \item \textbf{Configuration}~: export JSON, sanity check, visualisation.
+\end{enumerate}
+
+\subsection{Reproductibilité et détection du \emph{device}}
+
+\begin{lstlisting}[caption={Graine globale et détection GPU/CPU.}]
+SEED = 42
+random.seed(SEED)
+np.random.seed(SEED)
+tf.random.set_seed(SEED)
+
+gpus = tf.config.list_physical_devices("GPU")
+DEVICE = "GPU" if gpus else "CPU"
+if gpus:
+    for gpu in gpus:
+        tf.config.experimental.set_memory_growth(gpu, True)
+\end{lstlisting}
+
+\paragraph{Hyperparamètres globaux.}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lll}
+\toprule
+\textbf{Constante} & \textbf{Valeur} & \textbf{Rôle} \\
+\midrule
+\texttt{IMG\_SIZE}    & 224                          & Côté image (carrée) \\
+\texttt{BATCH\_SIZE}  & 32                           & Images par batch \\
+\texttt{NUM\_CLASSES} & 2                            & \emph{defect} / \emph{ok\_front} \\
+\texttt{MEAN}         & $[0.485, 0.456, 0.406]$      & Moyenne ImageNet (R/G/B) \\
+\texttt{STD}          & $[0.229, 0.224, 0.225]$      & Écart-type ImageNet (R/G/B) \\
+\texttt{AUTOTUNE}     & \texttt{tf.data.AUTOTUNE}    & Parallélisme automatique \\
+\bottomrule
+\end{tabular}
+\caption{Constantes globales partagées par tous les notebooks.}
+\end{table}
+
+\subsection{Color balancing — compatibilité \emph{graph} TensorFlow}
+
+Trois transformations stochastiques compatibles avec le \emph{graph mode}~:
+
+\begin{description}
+    \item[Gray-World White Balance ($p=0{,}5$)] normalise chaque canal par sa moyenne ; le facteur d'échelle est borné dans $[0{,}5\,;\,2{,}0]$ pour éviter la sur-exposition. Implémentée nativement avec \texttt{tf.cond}.
+    \item[Histogram Equalization ($p=0{,}3$)] égalise l'histogramme canal par canal via \texttt{PIL.ImageOps.equalize}, encapsulée dans \texttt{tf.py\_function}.
+    \item[Channel Shuffle ($p=0{,}15$)] permute aléatoirement l'ordre des canaux RGB ($6$ permutations), pour rendre le modèle robuste aux dérives de balance des couleurs.
+\end{description}
+
+\begin{lstlisting}[caption={Gray-World White Balance.}]
+means = tf.reduce_mean(image, axis=[0, 1])
+global_mean = tf.reduce_mean(means)
+scale = global_mean / means              # (3,)
+scale = tf.clip_by_value(scale, 0.5, 2.0)
+return tf.clip_by_value(image * scale, 0., 1.)
+\end{lstlisting}
+
+\subsection{Normalisation \emph{ImageNet} et pipelines train/eval}
+
+\begin{equation}
+\hat{x} = \frac{x - \mu}{\sigma}, \qquad
+\mu = \begin{pmatrix}0.485\\0.456\\0.406\end{pmatrix}, \quad
+\sigma = \begin{pmatrix}0.229\\0.224\\0.225\end{pmatrix}
+\end{equation}
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Opération} & \texttt{preprocess\_train} & \texttt{preprocess\_eval} \\
+\midrule
+Resize         & $256\times256$             & $256\times256$ \\
+Crop           & random $224\times224$      & center crop $224\times224$ \\
+Flips          & H + V                      & --- \\
+Rotation       & $\pm 180^\circ$ (\texttt{tfa})  & --- \\
+Color balance  & stochastique               & déterministe ($p=1$) \\
+Color jitter   & brightness/contrast/sat/hue & --- \\
+Grayscale      & $p=0{,}1$                  & --- \\
+Normalisation  & ImageNet                   & ImageNet \\
+\bottomrule
+\end{tabular}
+\caption{Comparaison \emph{train} \emph{vs.} \emph{eval}.}
+\end{table}
+
+\subsection{Chargement, pondération de classes et pipeline final}
+
+\begin{lstlisting}[caption={Chargement \texttt{tf.data} et pondération des classes.}]
+def _load_raw(directory, shuffle):
+    return tf.keras.utils.image_dataset_from_directory(
+        directory, labels="inferred", label_mode="int",
+        color_mode="rgb", batch_size=None,
+        image_size=(256, 256), shuffle=shuffle, seed=SEED,
+    )
+
+raw_train = _load_raw(TRAIN_DIR, shuffle=True)
+raw_val   = _load_raw(VAL_DIR,   shuffle=False)
+raw_test  = _load_raw(TEST_DIR,  shuffle=False)
+
+all_labels   = np.array([lbl.numpy() for _, lbl in raw_train])
+class_counts = np.bincount(all_labels, minlength=NUM_CLASSES)
+total        = len(all_labels)
+class_weights = {
+    i: float(total) / (NUM_CLASSES * int(count))
+    for i, count in enumerate(class_counts)
+}
+\end{lstlisting}
+
+\begin{equation}
+w_i \;=\; \frac{N_\text{total}}{N_\text{classes}\,\cdot\,n_i}
+\end{equation}
+
+\begin{lstlisting}[caption={Composition finale des datasets.}]
+train_dataset = (raw_train
+    .map(preprocess_train, num_parallel_calls=AUTOTUNE)
+    .batch(BATCH_SIZE, drop_remainder=True)
+    .prefetch(AUTOTUNE))
+
+val_dataset = (raw_val
+    .map(preprocess_eval,  num_parallel_calls=AUTOTUNE)
+    .batch(BATCH_SIZE).prefetch(AUTOTUNE))
+
+test_dataset = (raw_test
+    .map(preprocess_eval,  num_parallel_calls=AUTOTUNE)
+    .batch(BATCH_SIZE).prefetch(AUTOTUNE))
+\end{lstlisting}
+
+\subsection{Configuration JSON, utilitaires et contrôles}
+
+\begin{lstlisting}[caption={Export centralisé de la configuration.}]
+CONFIG = {
+    "img_size"     : 224,
+    "batch_size"   : 32,
+    "num_classes"  : 2,
+    "class_names"  : ["defect", "ok_front"],
+    "mean"         : [0.485, 0.456, 0.406],
+    "std"          : [0.229, 0.224, 0.225],
+    "class_weights": {"0": 1.12, "1": 0.90},
+    "device"       : "GPU"
+}
+\end{lstlisting}
+
+Quatre utilitaires complètent le module \texttt{preprocessing\_tf}~:
+\begin{itemize}
+    \item \texttt{sanity\_check()} — affiche \emph{shape}, min/max/mean d'un batch.
+    \item \texttt{show\_batch(ds, n=8)} — visualise $n$ images avec leur label.
+    \item \texttt{plot\_class\_distribution()} — histogramme \emph{defect} \emph{vs.} \emph{ok\_front}.
+    \item \texttt{compute\_mean\_std(ds, n=20)} — moyenne et écart-type empiriques.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.32\textwidth}
+        \includegraphics[width=\linewidth]{image13.png}
+        \caption{\texttt{sanity\_check()}}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.32\textwidth}
+        \includegraphics[width=\linewidth]{image14.png}
+        \caption{\texttt{show\_batch()}}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.32\textwidth}
+        \includegraphics[width=\linewidth]{image15.png}
+        \caption{Distribution des classes}
+    \end{subfigure}
+    \caption{Sorties des utilitaires de contrôle.}
+\end{figure}
+
+\section{Pipeline équivalent en PyTorch}
+
+Le pipeline PyTorch reprend les mêmes étapes (reproductibilité, augmentations, normalisation ImageNet) en s'appuyant sur \texttt{torchvision.transforms} et un \texttt{DataLoader} avec \texttt{WeightedRandomSampler}.
+
+\subsection{Reproductibilité et device}
+
+\begin{lstlisting}[caption={Reproductibilité et détection automatique du device.}]
+SEED = 42
+random.seed(SEED); np.random.seed(SEED)
+torch.manual_seed(SEED); torch.cuda.manual_seed_all(SEED)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
+
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+\end{lstlisting}
+
+\subsection{Color balancing personnalisé}
+
+\begin{itemize}
+    \item \textbf{AutoWhiteBalance} ($p=0{,}5$) — hypothèse \emph{Gray-World} pour corriger les dominantes des caméras industrielles.
+    \item \textbf{HistogramEqualization} ($p=0{,}3$) — fait ressortir les défauts subtils dans les zones peu contrastées.
+    \item \textbf{ChannelShuffle} ($p=0{,}15$) — permute les canaux RGB pour rendre le modèle indépendant de la teinte.
+\end{itemize}
+
+\subsection{Pipeline complet d'augmentations}
+
+Les transformations appliquées sur le \emph{train} se composent comme suit~: \texttt{Resize(256)}, \texttt{RandomCrop(224)}, \texttt{RandomHorizontalFlip}, \texttt{RandomVerticalFlip}, \texttt{RandomRotation(180)}, \texttt{AutoWhiteBalance}, \texttt{HistogramEqualization}, \texttt{ChannelShuffle}, \texttt{ColorJitter}, \texttt{RandomAffine(translate=5\%)}, \texttt{RandomGrayscale(0.1)}, \texttt{GaussianBlur}, \texttt{ToTensor}, et enfin \texttt{Normalize($\mu,\sigma$)}.
+
+\subsection{Gestion du déséquilibre de classes}
+
+Le dataset présente un léger déséquilibre (environ $65\,\%$ de \texttt{def\_front} et $35\,\%$ de \texttt{ok\_front}). Sans correction, le modèle apprendrait à toujours prédire la classe majoritaire. Nous utilisons un \texttt{WeightedRandomSampler}~:
+
+\begin{lstlisting}[caption={Pondération inverse-fréquence des échantillons.}]
+class_counts   = torch.bincount(targets)
+class_weights  = 1.0 / class_counts
+sample_weights = class_weights[targets]
+sampler = WeightedRandomSampler(
+    sample_weights, num_samples=len(sample_weights),
+    replacement=True
+)
+\end{lstlisting}
+
+\subsection{DataLoaders et utilitaires}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Loader} & \texttt{batch\_size} & \texttt{shuffle} & \textbf{Sampler} & \texttt{pin\_memory} \\
+\midrule
+\texttt{train\_loader} & 32 & --- & WeightedRandom & si CUDA \\
+\texttt{val\_loader}   & 32 & False & --- & si CUDA \\
+\texttt{test\_loader}  & 32 & False & --- & si CUDA \\
+\bottomrule
+\end{tabular}
+\caption{Configuration des trois \texttt{DataLoaders}.}
+\end{table}
+
+% =====================================================================
+%  CHAPITRE 5 — MODÉLISATION
+% =====================================================================
+\chapter{Modélisation et expérimentations}
+
+Trois familles de modèles ont été comparées dans une démarche progressive~:
+\begin{enumerate}
+    \item Un \textbf{MLP} (Multi-Layer Perceptron) comme \emph{baseline}.
+    \item Un \textbf{CNN} entraîné de zéro pour exploiter la structure spatiale des images.
+    \item Un modèle de \textbf{Transfer Learning} fondé sur \textsc{EfficientNetB0}.
+\end{enumerate}
+
+% --------------------------------------------------------- MLP
+\section{Modèle 1 — MLP (référence)}
+
+\subsection{Représentation des données}
+
+Les images d'entrée sont au format $224\times224\times3$. Or, un MLP ne sait traiter que des vecteurs 1D. Une couche \texttt{Flatten} est donc nécessaire~:
+
+\begin{equation}
+(224 \times 224 \times 3) \;\longrightarrow\; \mathbb{R}^{150\,528}
+\end{equation}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.38\textwidth}
+        \includegraphics[width=\linewidth]{image17.png}
+        \caption{Image d'entrée}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.55\textwidth}
+        \includegraphics[width=\linewidth]{image18.png}
+        \caption{Vectorisation par \texttt{Flatten}}
+    \end{subfigure}
+    \caption{Aplatissement d'une image en vecteur 1D.}
+\end{figure}
+
+\subsection{Architecture du MLP}
+
+\begin{infobox}[title=Architecture du MLP]
+\textbf{Entrée}~: $150\,528$ neurones\\
+$\to$ Dense(512) + BatchNorm + ReLU + Dropout(0.4)\\
+$\to$ Dense(256) + BatchNorm + ReLU + Dropout(0.4)\\
+$\to$ Dense(128) + BatchNorm + ReLU + Dropout(0.3)\\
+$\to$ Dense(2) + \textbf{Softmax}\quad ($\to$ \texttt{def\_front} / \texttt{ok\_front})
+\end{infobox}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{image19.png}
+    \caption{Schéma global de l'architecture MLP.}
+\end{figure}
+
+\subsection{Régularisation et stratégie d'entraînement}
+
+\begin{itemize}
+    \item \textbf{Batch Normalization}~: recentre les activations entre couches, accélère et stabilise l'apprentissage.
+    \item \textbf{Dropout (0,3--0,4)}~: éteint aléatoirement des neurones pour éviter le sur-apprentissage.
+    \item \textbf{Early Stopping (patience = 7)}~: arrêt automatique en cas de stagnation sur la validation.
+    \item \textbf{ReduceLROnPlateau}~: division du \emph{learning rate} si la perte stagne.
+\end{itemize}
+
+\subsection{Résultats}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \includegraphics[width=\linewidth]{image22.png}
+        \caption{Courbes de \emph{loss} et \emph{accuracy}}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.42\textwidth}
+        \includegraphics[width=\linewidth]{image24.png}
+        \caption{Matrice de confusion}
+    \end{subfigure}
+    \caption{Performance du MLP sur le jeu de test.}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lc}
+\toprule
+\textbf{Métrique} & \textbf{Valeur} \\
+\midrule
+Test Loss     & $0{,}7587$ \\
+Test Accuracy & $68{,}02\,\%$ \\
+Precision     & $74{,}07\,\%$ \\
+Recall        & $68{,}02\,\%$ \\
+F1-Score      & $67{,}95\,\%$ \\
+Epochs entraînés & $12 / 30$ (early stopping déclenché) \\
+\bottomrule
+\end{tabular}
+\caption{Résultats du MLP sur l'ensemble de test.}
+\end{table}
+
+\subsection{Analyse}
+
+\begin{description}
+    \item[\textcolor{ForestGreen}{Points forts.}] Convergence rapide, modèle de référence simple à comprendre et à entraîner.
+    \item[\textcolor{red}{Limites.}] Le \texttt{Flatten} \textbf{détruit la structure spatiale}~: les pixels voisins perdent leur lien, le modèle ne peut pas apprendre de \emph{textures} ni de \emph{contours}. D'où la nécessité de passer à un CNN.
+\end{description}
+
+% --------------------------------------------------------- CNN
+\section{Modèle 2 — CNN entraîné de zéro}
+
+\subsection{Construction de l'architecture}
+
+Le CNN exploite la structure 2D des images via des couches de convolution suivies de \emph{pooling}, qui extraient progressivement des caractéristiques de complexité croissante (bords $\to$ textures $\to$ formes).
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.46\textwidth}
+        \includegraphics[width=\linewidth]{image27.png}
+        \caption{Bloc convolutif générique}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.46\textwidth}
+        \includegraphics[width=\linewidth]{image30.png}
+        \caption{Vue d'ensemble du CNN}
+    \end{subfigure}
+    \caption{Architecture du CNN développé.}
+\end{figure}
+
+\subsection{Compilation et régularisation}
+
+\begin{itemize}
+    \item \textbf{Early Stopping} pour éviter le sur-apprentissage.
+    \item \textbf{Batch Normalization} pour stabiliser et accélérer l'apprentissage.
+    \item \textbf{Dropout} pour réduire le sur-apprentissage en désactivant aléatoirement des neurones.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{image31.png}
+    \caption{Compilation du modèle CNN (\emph{loss} \emph{categorical crossentropy}, optimiseur Adam).}
+\end{figure}
+
+\subsection{Entraînement}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.47\textwidth}
+        \includegraphics[width=\linewidth]{image32.png}
+        \caption{Boucle d'entraînement}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.47\textwidth}
+        \includegraphics[width=\linewidth]{image33.png}
+        \caption{Logs Keras (extrait)}
+    \end{subfigure}
+    \caption{Entraînement du CNN.}
+\end{figure}
+
+\subsection{Évaluation et diagnostic d'overfitting}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.47\textwidth}
+        \includegraphics[width=\linewidth]{image34.png}
+        \caption{\emph{Accuracy} train vs validation}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.47\textwidth}
+        \includegraphics[width=\linewidth]{image35.png}
+        \caption{\emph{Loss} train vs validation}
+    \end{subfigure}
+    \caption{Courbes d'entraînement du CNN avant régularisation supplémentaire.}
+\end{figure}
+
+\paragraph{Interprétation.}
+\begin{itemize}
+    \item L'\emph{accuracy} de \textbf{train} monte jusqu'à $\sim 99\,\%$~: le modèle apprend très bien les données d'entraînement.
+    \item L'\emph{accuracy} de \textbf{validation} monte d'abord, puis \textbf{diminue} en fin d'entraînement.
+    \item La \emph{loss} de validation \textbf{remonte} à partir des dernières \emph{epochs}.
+\end{itemize}
+
+$\Rightarrow$ Diagnostic clair de \textbf{sur-apprentissage} (\emph{overfitting})~: le modèle mémorise les données d'entraînement.
+
+\subsection{Régularisation par augmentation des données}
+
+Pour atténuer l'overfitting, nous ajoutons des augmentations de données (rotations, flips, jitter, zoom).
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \includegraphics[width=\linewidth]{image36.png}
+        \caption{\emph{Accuracy} après augmentation}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.42\textwidth}
+        \includegraphics[width=\linewidth]{image37.png}
+        \caption{Exemples d'images augmentées}
+    \end{subfigure}
+    \caption{Effet de la \emph{data augmentation} sur l'apprentissage.}
+\end{figure}
+
+\subsection{Conclusion intermédiaire}
+
+\begin{infobox}[title=Bilan du CNN]
+L'augmentation des données corrige efficacement le problème d'\emph{overfitting} et fournit un modèle plus robuste et plus généralisable. Cependant, atteindre $99\,\%$ de précision avec un CNN entraîné de zéro nécessiterait beaucoup plus de données. C'est pourquoi nous passons au \textbf{Transfer Learning}.
+\end{infobox}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{image38.png}
+    \caption{Synthèse du modèle CNN.}
+\end{figure}
+
+% --------------------------------------------------------- TL
+\section{Modèle 3 — Transfer Learning avec EfficientNetB0}
+
+\subsection{Qu'est-ce que le Transfer Learning~?}
+
+Le \emph{Transfer Learning} (apprentissage par transfert) consiste à \textbf{réutiliser un réseau de neurones déjà entraîné} sur une grande base d'images (ImageNet, $\sim 1{,}2$~million d'images, $1\,000$ classes), puis à l'adapter à un nouveau problème plus spécifique — ici, la détection de défauts de fonderie.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{image39.png}
+    \caption{Principe du Transfer Learning.}
+\end{figure}
+
+\subsection{Stratégie en deux phases}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{p{4cm}p{8.5cm}}
+\toprule
+\textbf{Phase} & \textbf{Ce que l'on entraîne} \\
+\midrule
+1. Extraction de caractéristiques & \textbf{Tête de classification uniquement}~: le \emph{backbone} pré-entraîné est gelé. \\[2pt]
+2. \emph{Fine-tuning}              & Tête \textbf{+} dernières couches du \emph{backbone}, avec un \emph{learning rate} très faible. \\
+\bottomrule
+\end{tabular}
+\caption{Stratégie de Transfer Learning à deux étages.}
+\end{table}
+
+\paragraph{Pourquoi ce choix ?}
+\begin{itemize}
+    \item Notre dataset est relativement petit ($\sim 6\,600$ images d'entraînement).
+    \item Entraîner un grand réseau de zéro provoquerait du sur-apprentissage.
+    \item Les caractéristiques visuelles génériques apprises sur ImageNet (contours, textures, formes) sont \emph{transférables} à presque toute tâche d'image.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{image40.png}
+    \caption{Réutilisation du \emph{backbone} pré-entraîné.}
+\end{figure}
+
+\subsection{Architecture choisie~: EfficientNetB0}
+
+\textsc{EfficientNet} est une famille de modèles de \emph{deep learning} pour la classification d'images, développée par Google en 2019. Sa particularité est de \textbf{coupler haute performance et faible coût de calcul} grâce à un \emph{compound scaling} (mise à l'échelle conjointe de la profondeur, largeur et résolution).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{image41.png}
+    \caption{Architecture EfficientNetB0.}
+\end{figure}
+
+\subsection{Source des données et préparation}
+
+Le dataset utilisé est la \textbf{version augmentée} fournie directement par l'auteur sur Kaggle, déjà adaptée aux contraintes industrielles (variations d'éclairage, angles, textures de surface). Notre prétraitement se limite donc au redimensionnement et à la normalisation requise par EfficientNetB0.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{image42.png}
+    \caption{Dataset augmenté fourni sur Kaggle.}
+\end{figure}
+
+\paragraph{Chargement automatique.}
+Keras lit l'arborescence \texttt{train/ok\_front/} et \texttt{train/def\_front/}, redimensionne en $224\times224$ et attribue un label binaire automatiquement. La fonction \texttt{preprocess\_input} d'EfficientNet transforme les valeurs $[0,255]$ vers $[-1,1]$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{image43.png}
+    \caption{Code de chargement et de prétraitement.}
+\end{figure}
+
+\subsection{Hyperparamètres}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{image44.png}
+    \caption{Hyperparamètres clés des deux phases.}
+\end{figure}
+
+\subsection{Construction du modèle}
+
+On conserve le \emph{backbone} EfficientNetB0 sans son classificateur d'origine, et on le \textbf{verrouille} pour préserver le savoir acquis sur ImageNet. Les cartes de caractéristiques sont condensées par un \emph{Global Average Pooling}, suivies d'un \texttt{Dropout} pour la régularité, et d'une couche \texttt{Dense(1)} avec activation \emph{sigmoid} pour la prédiction binaire.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.65\textwidth}
+        \includegraphics[width=\linewidth]{image45.png}
+        \caption{Code de construction du modèle}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.30\textwidth}
+        \includegraphics[width=\linewidth]{image46.png}
+        \caption{Sortie}
+    \end{subfigure}
+    \caption{Construction du modèle de Transfer Learning.}
+\end{figure}
+
+\subsection{Phase 1 — Extraction de caractéristiques}
+
+Seule la tête de classification est entraînée ($1\,280$ paramètres). Les résultats sont déjà excellents~:
+
+\begin{infobox}[title=Phase 1 — Résultats]
+\texttt{accuracy}\,:\,$0{,}9749$ \quad|\quad \texttt{auc}\,:\,$0{,}9957$ \quad|\quad \texttt{loss}\,:\,$0{,}0924$\\
+\texttt{val\_accuracy}\,:\,$0{,}9900$ \quad|\quad \texttt{val\_auc}\,:\,$0{,}9963$ \quad|\quad \texttt{val\_loss}\,:\,$0{,}0625$
+\end{infobox}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{image48.png}
+    \caption{Logs d'entraînement — Phase 1.}
+\end{figure}
+
+\textbf{Point clé.} La \emph{val\_accuracy} ($99\,\%$) est \textbf{supérieure} à l'\emph{accuracy} de train ($97{,}5\,\%$) — signe que le modèle \emph{généralise} très bien et ne sur-apprend pas. Les caractéristiques d'ImageNet sont visiblement très adaptées à nos images.
+
+\subsection{Phase 2 — Fine-tuning}
+
+Les premières couches détectent des concepts très généraux (bords, couleurs)~: on les garde intactes. On dégèle les \textbf{derniers blocs MBConv} (features de haut niveau) et on entraîne avec un \emph{learning rate} très faible pour ajuster finement les filtres pré-entraînés sans les détruire. Environ $2$~millions de paramètres deviennent entraînables.
+
+\begin{infobox}[title=Phase 2 — Résultats]
+\texttt{accuracy}\,:\,$0{,}9940$ \quad|\quad \texttt{auc}\,:\,$0{,}9992$ \quad|\quad \texttt{loss}\,:\,$0{,}0232$\\
+\texttt{val\_accuracy}\,:\,$0{,}9930$ \quad|\quad \texttt{val\_auc}\,:\,$0{,}9997$ \quad|\quad \texttt{val\_loss}\,:\,$0{,}0192$
+\end{infobox}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{image51.png}
+    \caption{Logs d'entraînement — Phase 2 (\emph{fine-tuning}).}
+\end{figure}
+
+\textbf{Bilan~:} $+1{,}9\,\%$ d'\emph{accuracy} ($97{,}5\,\% \to 99{,}4\,\%$) et la \emph{val\_loss} divisée par $\sim 3$ (de $0{,}0625$ à $0{,}0192$).
+
+\subsection{Courbes d'entraînement}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{image52.png}
+    \caption{Courbes \emph{accuracy} / \emph{loss} / AUC durant les phases 1 et 2.}
+\end{figure}
+
+\paragraph{Lecture des courbes.}
+\begin{itemize}
+    \item L'\emph{accuracy} de validation monte rapidement, la \emph{loss} chute~: les features ImageNet se transfèrent très bien.
+    \item Les courbes \emph{train} et \emph{validation} restent proches~: \textbf{pas de sur-apprentissage}.
+    \item La transition Phase~1 $\to$ Phase~2 est visible et apporte un gain mesurable.
+    \item L'AUC $\approx 0{,}99$ signifie que pour deux images tirées au hasard (une défectueuse, une OK), le modèle les sépare presque parfaitement — performance \emph{excellente} pour le contrôle qualité industriel.
+\end{itemize}
+
+% =====================================================================
+%  CHAPITRE 6 — ÉVALUATION FINALE
+% =====================================================================
+\chapter{Évaluation finale et discussion}
+
+\section{Performance sur l'ensemble de test}
+
+L'évaluation finale est réalisée sur les \textbf{715 images du \emph{test set}, jamais vues par le modèle} (453 défectueuses, 262 conformes).
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.62\textwidth}
+        \includegraphics[width=\linewidth]{image53.png}
+        \caption{Rapport de classification \emph{scikit-learn}}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.32\textwidth}
+        \includegraphics[width=\linewidth]{image54.png}
+        \caption{Score global}
+    \end{subfigure}
+    \caption{Performance détaillée sur le \emph{test set}.}
+\end{figure}
+
+\begin{infobox}[title=Métriques industrielles clés]
+\textbf{Precision sur \texttt{def\_front}~: $99{,}78\,\%$}\\
+$\Rightarrow$ Quand le modèle dit ``défectueux'', il a raison dans $99{,}78\,\%$ des cas — très peu de fausses alertes (donc peu d'arrêts de production inutiles).\\[4pt]
+\textbf{Recall sur \texttt{def\_front}~: $99{,}34\,\%$}\\
+$\Rightarrow$ C'est \textbf{LA} métrique critique en contrôle qualité. Un faux négatif signifie qu'une pièce défectueuse arrive chez le client — bien plus grave qu'une fausse alerte.
+\end{infobox}
+
+\section{Matrice de confusion}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{image55.png}
+    \caption{Matrice de confusion sur le \emph{test set}.}
+\end{figure}
+
+\section{Courbes ROC et Precision-Recall}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{image56.png}
+    \caption{Courbes ROC (gauche) et Precision-Recall (droite).}
+\end{figure}
+
+\paragraph{Lecture.}
+\begin{itemize}
+    \item La courbe \textbf{ROC} atteint $\text{AUC} = 0{,}9993$~: pour tout seuil de décision, le modèle détecte presque tous les défauts (TPR élevé) tout en signalant presque zéro fausse alarme (FPR bas). La courbe colle au coin supérieur gauche — comportement \emph{idéal}.
+    \item La courbe \textbf{Precision-Recall} est plus informative en cas de classes déséquilibrées (453 \emph{vs.} 262). L'\emph{Average Precision} de $0{,}9996$ confirme que la précision reste quasi-parfaite même pour des \emph{recalls} très élevés.
+\end{itemize}
+
+\section{Analyse des erreurs}
+
+Nous parcourons l'ensemble du \emph{test set} pour identifier les erreurs et les répartir en deux catégories~:
+\begin{itemize}
+    \item \textbf{FN — Faux Négatifs} (\emph{true} = \texttt{def\_front}, \emph{pred} = \texttt{ok\_front})~: pièces défectueuses laissées passer. \textbf{Plus critique en QC.}
+    \item \textbf{FP — Faux Positifs} (\emph{true} = \texttt{ok\_front}, \emph{pred} = \texttt{def\_front})~: pièces saines signalées comme défectueuses. Génèrent des fausses alertes.
+\end{itemize}
+
+Pour chaque image, on affiche la probabilité \emph{sigmoid} $p$~: $p \to 1$ signifie ``défectueux'' avec haute confiance, $p \to 0$ ``OK'', et $p \approx 0{,}5$ une zone d'incertitude.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{image57.png}
+    \caption{Visualisation des images mal classées (FN à gauche, FP à droite).}
+\end{figure}
+
+\section{Comparaison globale des trois modèles}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Métrique} & \textbf{MLP} & \textbf{CNN} & \textbf{EfficientNetB0 (TL)} \\
+\midrule
+Accuracy (test)            & $68{,}02\,\%$ & $\sim 95\,\%^\dagger$ & $\mathbf{99{,}44\,\%}$ \\
+AUC                        & ---           & ---                   & $\mathbf{0{,}9993}$    \\
+Recall \texttt{def\_front} & $\sim 68\,\%$ & ---                   & $\mathbf{99{,}34\,\%}$ \\
+Sur-apprentissage          & Faible        & Présent (corrigé)     & \textbf{Aucun}         \\
+Coût d'entraînement        & Faible        & Modéré                & Faible (\emph{frozen}) \\
+\bottomrule
+\end{tabular}
+\caption{Comparatif des trois approches. ${}^\dagger$~après \emph{data augmentation}.}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{image60.png}
+    \caption{Comparaison des courbes ROC — le Transfer Learning discrimine quasi-parfaitement les deux classes, quel que soit le seuil.}
+\end{figure}
+
+% =====================================================================
+%  CONCLUSION
+% =====================================================================
+\chapter{Conclusion et perspectives}
+
+\section{Bilan}
+
+Avec seulement $\sim 6\,600$ images d'entraînement et un GPU Colab, nous avons atteint \textbf{$99{,}44\,\%$ d'accuracy} et un \textbf{AUC de $0{,}9993$} grâce au Transfer Learning sur \textsc{EfficientNetB0}. Sans Transfer Learning, atteindre la même performance aurait nécessité des dizaines de milliers d'images et plusieurs jours d'entraînement.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{image58.png}
+    \caption{Synthèse visuelle du résultat final.}
+\end{figure}
+
+\begin{infobox}[title=Apports du projet]
+\begin{itemize}
+    \item Pipeline de prétraitement \emph{cross-framework} (TensorFlow et PyTorch).
+    \item Démarche progressive et pédagogique~: MLP $\to$ CNN $\to$ Transfer Learning.
+    \item Modèle final compatible avec un déploiement industriel temps réel.
+    \item \emph{Recall} de $99{,}34\,\%$ sur la classe défectueuse — adapté aux exigences QC.
+\end{itemize}
+\end{infobox}
+
+\section{Perspectives}
+
+Plusieurs pistes peuvent être explorées pour aller plus loin~:
+\begin{itemize}
+    \item \textbf{Multi-classes}~: distinguer plusieurs types de défauts (fissure, déformation, bavure, porosité).
+    \item \textbf{Localisation}~: ajouter une détection d'objet (YOLO, Faster R-CNN) ou une segmentation pour localiser le défaut.
+    \item \textbf{Embedded deployment}~: quantification et export vers \textsc{TensorFlow Lite} pour exécution sur un Raspberry Pi ou un Edge TPU en bord de ligne.
+    \item \textbf{Robustesse industrielle}~: collecte d'images réelles de l'usine pour valider la généralisation \emph{in situ}.
+    \item \textbf{Active learning}~: enrichissement progressif du dataset avec les cas incertains détectés en production.
+\end{itemize}
+
+\vspace{1cm}
+\begin{center}
+{\Large\bfseries\color{primary} Merci pour votre attention.}
+\end{center}
+
+\end{document}
