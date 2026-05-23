@@ -1,27 +1,46 @@
 # Rapport LaTeX — Système Intelligent de Contrôle Qualité des Impellers
 
-Rapport académique généré à partir de la présentation
-**« Système Intelligent de Contrôle Qualité des Impellers »** (BDIA1, 2025–2026).
+Rapport académique de fin de module (BDIA1, 2025–2026) généré à partir
+de la présentation **« Système Intelligent de Contrôle Qualité des Impellers »**.
+
+Le rapport est rédigé dans un style académique de niveau projet de fin de module,
+avec **résumé bilingue (FR/EN)**, **liste des figures et tableaux**, **liste des
+acronymes**, **bibliographie** (24 références) et chaque figure systématiquement
+introduite et commentée.
 
 ## Contenu
 
 ```
 report/
-├── main.tex          # Source LaTeX du rapport (français)
+├── main.tex          # Source LaTeX du rapport (français, ~108 KB)
+├── main.pdf          # PDF compilé (64 pages, ~14 MB)
 ├── images/           # 60 images extraites de la présentation .pptx
 └── README.md
 ```
 
-Le rapport couvre :
+## Structure du rapport (64 pages)
 
-1. **Introduction** — contexte industriel de la fonderie et étapes de fabrication
-2. **Problématique et objectif** — détection automatique des défauts (fissures, déformations, bavures)
-3. **Solution proposée** — architecture globale du système de contrôle qualité
-4. **Données** — dataset *Casting Defect Detection* (Kaggle, R. Dabhi)
-5. **Prétraitement** — pipelines TensorFlow et PyTorch (reproductibilité, augmentations, normalisation ImageNet, gestion du déséquilibre)
-6. **Modélisation** — comparaison MLP / CNN / Transfer Learning (EfficientNetB0)
-7. **Évaluation finale** — métriques, matrice de confusion, courbes ROC et Precision-Recall, analyse des erreurs
-8. **Conclusion et perspectives**
+**Front-matter :**
+- Page de garde
+- Remerciements
+- Résumé (français)
+- Abstract (anglais)
+- Table des matières
+- Liste des figures
+- Liste des tableaux
+- Liste des acronymes
+
+**Chapitres :**
+1. **Introduction générale** — contexte, problématique, objectifs, méthodologie, organisation
+2. **État de l'art** — vision artificielle, architectures CNN marquantes, EfficientNet, Transfer Learning, travaux relatifs
+3. **Procédé de fabrication et typologie des défauts** — fonderie en moule carapace, défauts observés
+4. **Acquisition et organisation des données** — dataset *Casting Defect Detection* (Kaggle)
+5. **Prétraitement des images** — pipelines TensorFlow et PyTorch détaillés
+6. **Modélisation et expérimentations** — MLP / CNN / Transfer Learning (EfficientNetB0)
+7. **Évaluation finale et discussion** — métriques industrielles, ROC/PR, analyse d'erreurs, comparaison
+8. **Conclusion générale et perspectives**
+
+**Bibliographie :** 24 références (LeCun, Krizhevsky, He, Tan & Le, Ioffe, Srivastava, Kingma, Pan & Yang, etc.)
 
 ## Compilation
 
@@ -31,13 +50,15 @@ Le rapport couvre :
 2. Téléverser `main.tex` et le dossier `images/`.
 3. Définir `main.tex` comme document principal.
 4. Compilateur : **pdfLaTeX**.
-5. Compiler — le PDF est généré automatiquement.
+5. Compiler une fois → puis **lancer makeglossaries** (Menu → Glossaries) → recompiler 2 fois pour les références croisées.
 
 ### Option 2 — Local (TeX Live ou MiKTeX)
 
 ```bash
 pdflatex main.tex
-pdflatex main.tex   # 2e passe pour la table des matières et les références
+makeglossaries main         # Pour générer la liste des acronymes
+pdflatex main.tex           # 2e passe
+pdflatex main.tex           # 3e passe pour les références croisées
 ```
 
 ## Packages LaTeX requis
@@ -45,10 +66,10 @@ pdflatex main.tex   # 2e passe pour la table des matières et les références
 Tous standards et disponibles sur Overleaf :
 
 `inputenc`, `fontenc`, `babel` (french), `lmodern`, `microtype`, `geometry`,
-`setspace`, `parskip`, `fancyhdr`, `titlesec`, `enumitem`, `graphicx`,
+`setspace`, `parskip`, `fancyhdr`, `titlesec`, `enumitem`, `epigraph`, `graphicx`,
 `float`, `caption`, `subcaption`, `array`, `booktabs`, `longtable`,
-`tabularx`, `multirow`, `xcolor` (dvipsnames), `tcolorbox`, `listings`,
-`amsmath`, `amssymb`, `amsfonts`, `hyperref`.
+`tabularx`, `multirow`, `makecell`, `xcolor` (dvipsnames), `tcolorbox`, `listings`,
+`amsmath`, `amssymb`, `amsfonts`, `glossaries`, `hyperref`.
 
 ## Auteurs
 
